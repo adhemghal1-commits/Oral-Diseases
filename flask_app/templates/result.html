@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - Oral Disease Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-tooth"></i>
+            </div>
+            <h1>Oral Disease Classifier</h1>
+            <p class="subtitle">Analysis Result</p>
+        </header>
+
+        <!-- Result Section -->
+        <div class="result-section">
+            <div class="result-grid">
+                <!-- Uploaded Image -->
+                <div class="image-card">
+                    <h3><i class="fas fa-image"></i> Uploaded Image</h3>
+                    <img src="{{ url_for('static', filename=image_path) }}" alt="Uploaded dental image" class="result-image">
+                </div>
+
+                <!-- Prediction Result -->
+                <div class="prediction-card">
+                    <h3><i class="fas fa-stethoscope"></i> Diagnosis</h3>
+                    
+                    <div class="prediction-main" style="border-left: 5px solid {{ disease_info.get('color', '#2196F3') }};">
+                        <div class="predicted-class">{{ predicted_class }}</div>
+                        <div class="confidence-container">
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: {{ confidence }}%; background: {{ disease_info.get('color', '#2196F3') }};"></div>
+                            </div>
+                            <span class="confidence-text">{{ confidence }}% confidence</span>
+                        </div>
+                    </div>
+
+                    <!-- Disease Info -->
+                    {% if disease_info %}
+                    <div class="disease-info">
+                        <div class="info-item">
+                            <i class="fas fa-info-circle" style="color: {{ disease_info.get('color', '#2196F3') }};"></i>
+                            <div>
+                                <strong>Description</strong>
+                                <p>{{ disease_info.get('description', '') }}</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-exclamation-triangle" style="color: #FF9800;"></i>
+                            <div>
+                                <strong>Severity</strong>
+                                <p>{{ disease_info.get('severity', 'N/A') }}</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-notes-medical" style="color: #4CAF50;"></i>
+                            <div>
+                                <strong>Recommendation</strong>
+                                <p>{{ disease_info.get('recommendation', '') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- All Predictions -->
+            <div class="all-predictions">
+                <h3><i class="fas fa-chart-bar"></i> All Class Probabilities</h3>
+                <div class="prob-bars">
+                    {% for class_name, prob in all_predictions.items() %}
+                    <div class="prob-row">
+                        <span class="prob-label">{{ class_name.replace('_', ' ') }}</span>
+                        <div class="prob-bar-container">
+                            <div class="prob-bar-fill" style="width: {{ prob }}%;"></div>
+                        </div>
+                        <span class="prob-value">{{ prob }}%</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <a href="{{ url_for('index') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Analyze Another Image
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p><i class="fas fa-exclamation-triangle"></i> 
+               <strong>Disclaimer:</strong> This tool is for educational purposes only. 
+               Always consult a qualified dental professional for diagnosis and treatment.</p>
+        </footer>
+    </div>
+</body>
+</html>
+
